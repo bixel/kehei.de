@@ -4,6 +4,5 @@ pages:
   script:
     - apk update && apk add rsync
     - rsync --delete -r index.html /home/gitlab-runner/kehei.de/
-    - rm /home/gitlab-runner/../bixel/foo.bar
   only:
     - master
