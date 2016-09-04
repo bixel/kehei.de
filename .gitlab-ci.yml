@@ -3,13 +3,13 @@
 pages:
   stage: deploy
   script:
-  - mkdir .public
-  - cp -r * .public
-  - mv .public public
+    - mkdir .public
+    - cp -r * .public
+    - mv .public public
+    - apt-get install -y rsync
+    - rsync --delete -r public/ ~/public/
   artifacts:
     paths:
     - public
-  script:
-    - rsync --delete -r public/ ~/public/
   only:
   - master
