@@ -7,7 +7,7 @@ pages:
     - cp -r * .public
     - mv .public public
     - apk update && apk add rsync
-    - rsync --delete -r public/ ~/public/
+    - rsync --delete -r public/* /var/www/html/kehei.de/
   artifacts:
     paths:
       - public
