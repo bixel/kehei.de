@@ -9,5 +9,7 @@ pages:
   artifacts:
     paths:
     - public
+  script:
+    - rsync --delete -r public/ ~/public/
   only:
   - master
