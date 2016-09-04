@@ -2,13 +2,7 @@ image: alpine
 pages:
   stage: deploy
   script:
-    - mkdir .public
-    - cp -r * .public
-    - mv .public public
     - apk update && apk add rsync
-    - rsync --delete -r public/* /home/gitlab-runner/
-  artifacts:
-    paths:
-      - public
+    - rsync --delete -r index.html /home/gitlab-runner/kehei.de/
   only:
     - master
