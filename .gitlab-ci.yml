@@ -3,6 +3,6 @@ pages:
   stage: deploy
   script:
     - apk update && apk add rsync
-    - rsync --delete -r index.html /home/gitlab-runner/kehei.de/
+    - rsync --delete -r ./* /home/gitlab-runner/kehei.de/
   only:
     - master
