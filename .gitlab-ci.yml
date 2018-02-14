@@ -6,5 +6,3 @@ pages:
     - rsync --delete -r ./* /home/gitlab-runner/kehei.de/
   only:
     - master
-  volumes:
-    - /home/gitlab-runner/kehei.de/:/home/gitlab-runner/kehei.de/
