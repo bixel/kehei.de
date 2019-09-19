@@ -9,17 +9,17 @@ then
 	# first add remote host to known hosts
 	ssh-keyscan -t rsa $DEPLOY_HOST 2> /dev/null | sort -u - ~/.ssh/known_hosts -o ~/.ssh/known_hosts
 	# decrypt private shh key
-	openssl aes-256-cbc -K $encrypted_55544047fffb_key -iv $encrypted_55544047fffb_iv
-  -in deploy_key.enc -out deploy_key -d
+	openssl aes-256-cbc -K $encrypted_55544047fffb_key -iv $encrypted_55544047fffb_iv -in deploy_key.enc -out deploy_key -d
 
 	# start ssh-agent and add the key
 	eval "$(ssh-agent -s)"
 	chmod 600 deploy_key
 	ssh-add deploy_key
+	ssh-add -l
 
 	# compile the website
 	# upload site
-	rsync -rq --links --delete --exclude=".*" ~ $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+	rsync -rq --links --delete --exclude=".*" --exclude="Gemfile*" --exclude="deploy_key*" . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 else
 	echo "NOT ON MASTER BRANCH, WILL NOT DEPLOY SITE"
-fi<Paste>
+fi

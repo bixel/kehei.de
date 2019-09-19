@@ -2,6 +2,6 @@ language: ruby
 rvm:
 - 2.3.2
 script:
-- bundle exec htmlproofer ./ --check-html
+- bundle exec htmlproofer .
 after_success:
 - bash ./.deploy_site.sh
