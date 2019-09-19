@@ -1,8 +1,0 @@
-image: alpine
-pages:
-  stage: deploy
-  script:
-    - apk update && apk add rsync
-    - rsync --delete -r ./* /home/gitlab-runner/kehei.de/
-  only:
-    - master
