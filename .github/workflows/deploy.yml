@@ -19,5 +19,6 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v2
+      - run: ls -la && pwd
       - run: deploy.sh
         working-directory: $GITHUB_WORKSPACE
