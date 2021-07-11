@@ -14,5 +14,5 @@ jobs:
           bundler-cache: true
       - run: bundle install
       - run: bundle exec htmlproofer $GITHUB_WORKSPACE/index.html
-      - run: ./deploy.sh
+      - run: deploy.sh
         working-directory: $GITHUB_WORKSPACE
