@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 # taken from pep-dortmund.org, inspired by https://oncletom.io/2016/travis-ssh-deploy/
 set -e # exit with nonzero exit code if anything fails
 
