@@ -2,24 +2,11 @@
 # taken from pep-dortmund.org, inspired by https://oncletom.io/2016/travis-ssh-deploy/
 set -e # exit with nonzero exit code if anything fails
 
-# clear and re-create the out directory
-if [[ $TRAVIS_BRANCH == 'master' ]] && [[ $TRAVIS_PULL_REQUEST = false ]]
-then
-	# add remote ssh-key to key-storage
-	# first add remote host to known hosts
-	ssh-keyscan -t rsa $DEPLOY_HOST 2> /dev/null | sort -u - ~/.ssh/known_hosts -o ~/.ssh/known_hosts
-	# decrypt private shh key
-	openssl aes-256-cbc -K $encrypted_55544047fffb_key -iv $encrypted_55544047fffb_iv -in deploy_key.enc -out deploy_key -d
+# store password
+echo $PASSWORD > password-file
 
-	# start ssh-agent and add the key
-	eval "$(ssh-agent -s)"
-	chmod 600 deploy_key
-	ssh-add deploy_key
-	ssh-add -l
-
-	# compile the website
-	# upload site
-	rsync -rq --links --delete --exclude=".*" --exclude="Gemfile*" --exclude="deploy_key*" . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
-else
-	echo "NOT ON MASTER BRANCH, WILL NOT DEPLOY SITE"
-fi
+# compile the website
+# upload site
+rsync --password-file password-file -rq --links --delete --exclude=".*" \
+  --exclude="Gemfile*" --exclude="deploy_key*" --exclude="password-file" . \
+  $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
