@@ -19,6 +19,8 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v2
-      - run: ls -la && pwd
-      - run: deploy.sh
+      - run: |
+          rsync -rq --links --delete --exclude=".*"
+          --exclude="Gemfile*" --exclude="deploy_key*"
+          . $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
         working-directory: $GITHUB_WORKSPACE
