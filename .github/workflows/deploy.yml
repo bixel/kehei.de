@@ -24,4 +24,3 @@ jobs:
           rsync -rq --links --delete --exclude=".*"
           --exclude="Gemfile*" --exclude="deploy_key*"
           . ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
-        working-directory: $GITHUB_WORKSPACE
