@@ -1,0 +1,17 @@
+name: deploy
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2
+      - uses: setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+      - run: bundle install
+      - run: bundle exec htmlproofer .
+      - run: bash ./.deploy_site.sh
