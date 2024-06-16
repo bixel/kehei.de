@@ -31,6 +31,11 @@ jobs:
           ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
           mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
           ssh-keyscan ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+      - name: test ssh
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: >
+          ssh "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" -- ls "${{ secrets.DEPLOY_PATH }}"
       - env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: >
