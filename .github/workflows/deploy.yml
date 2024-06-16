@@ -14,7 +14,7 @@ jobs:
           ruby-version: 3.3
           bundler-cache: true
       - run: bundle install
-      - run: >
+      - run:
           bundle exec htmlproofer
           --ignore-status-codes 429
           $GITHUB_WORKSPACE/index.html
@@ -31,6 +31,9 @@ jobs:
           ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
           mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
           ssh-keyscan ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
-          rsync -rq --links --delete --exclude=".*" \
-            --exclude="Gemfile*" --exclude="deploy_key*" \
-            . ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
+      - env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: >
+          rsync -rq --links --delete --exclude=".*"
+          --exclude="Gemfile*" --exclude="deploy_key*"
+          . "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}"
