@@ -26,7 +26,7 @@ jobs:
         run: |
           echo $SSH_PRIVATE_KEY > id_rsa
           chmod 600 id_rsa
-          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          $(eval ssh-agent)
           ssh-add id_rsa
           rm id_rsa
       - env:
