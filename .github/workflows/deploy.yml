@@ -21,12 +21,17 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v2
-      - run: |
+      - env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
           echo $SSH_PRIVATE_KEY > id_rsa
-          $(eval ssh-agent)
+          chmod 600 id_rsa
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           ssh-add id_rsa
           rm id_rsa
-      - run: >
+      - env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: >
           rsync -rq --links --delete --exclude=".*"
           --exclude="Gemfile*" --exclude="deploy_key*"
           . ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
