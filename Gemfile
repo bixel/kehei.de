@@ -6,4 +6,4 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 # gem "rails"
 
-gem "html-proofer", "~> 3.12"
+gem "html-proofer", "~> 5.0"
