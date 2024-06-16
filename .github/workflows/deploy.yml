@@ -25,22 +25,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
-          ssh-add -l
-          mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
-          ssh-keyscan ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
-          ssh "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" -- ls "${{ secrets.DEPLOY_PATH }}"
-      - name: test ssh
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-        run: >
-          ssh "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" -- ls "${{ secrets.DEPLOY_PATH }}"
-      - env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-        run: >
-          rsync -rq --links --delete --exclude=".*"
-          --exclude="Gemfile*" --exclude="deploy_key*"
-          . "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}"
+          mkdir -p ~/.ssh
+          ssh-keyscan -t rsa "$DEPLOY_HOST" 2> /dev/null | sort -u  -o ~/.ssh/known_hosts
+          echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+          eval "$(ssh-agent -s)"
+          chmod 600 ~/.ssh/deploy_key
+          ssh-add ~/.ssh/deploy_key
+          rsync -rq --links --delete --exclude=".*" . "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
